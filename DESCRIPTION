@@ -1,0 +1,15 @@
+Package: randomvariable
+Type: Package
+Title: Probability Calculations on Arbitrary Random Variables
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: Daniel Luckett <daniel.luckett.work@gmail.com>
+Description: This package allows for defining arbitrary random variable object 
+    from a probability density function or cumulative distribution function. 
+    Users can extract surivival functions, hazard functions, and 
+    moment-generating functions from a random variable object, as well as 
+    calculating probabilities, summarizing distributions, and generating 
+    random variates.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
