@@ -38,13 +38,6 @@ mapRV.RV = function(X, g) {
   Y
 }
 
-# TODO: infix operators (sum, product, difference, quotient), min, and max
-# Sum and product have basic formulas
-# Difference is mapRV with g(x) = -x and then a sum
-# Quotient is mapRV with g(x) = 1/x and then a sum
-# Min and max have basic formulas
-# Order statistics have basic formulas
-
 #' Find the Distribution of a Convolution of Random Variables
 #'
 #' This function finds the distribution of a convolution of two random variables.
