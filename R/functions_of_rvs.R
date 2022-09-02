@@ -15,7 +15,7 @@ mapRV = function(X, ...) {
 #'
 #' This function uses the distribution function technique to find the distribution
 #'   of a differentiable function of a random variable and returns the result
-#'   as an RV object.
+#'   as an RV object. This function is still experimental.
 #'
 #' @param X An object of class "RV".
 #' @param g A differentiable function.
@@ -33,8 +33,8 @@ mapRV.RV = function(X, g) {
   }
   Y = createRV(h,
                type = "CDF",
-               lower = g(X[["lower"]]),
-               upper = g(X[["upper"]]))
+               lower = min(g(X[["lower"]]), g(X[["upper"]])),
+               upper = max(g(X[["lower"]]), g(X[["upper"]])))
   Y
 }
 
@@ -55,6 +55,8 @@ mapRV.RV = function(X, g) {
 #' @param Y An object of class "RV".
 #'
 #' @return An object of class "RV", whose distribution is that of X + Y.
+#'
+#' @export
 `%convolution%` = function(X, Y) {
   f = getPDF(X)
   g = getCDF(Y)
@@ -72,13 +74,15 @@ mapRV.RV = function(X, g) {
 #' Find the Distribution of a Product of Random Variables
 #'
 #' This function finds the distribution of a product of two random variables.
-#'   The two random variables are assumed to be independent. The results is
-#'   returned as an object of class "TV".
+#'   The two random variables are assumed to be independent. The result is
+#'   returned as an object of class "RV".
 #'
 #' @param X An object of class "RV".
 #' @param Y An object of class "RV".
 #'
 #' @return An object of class "RV", whose distribution is that of X * Y.
+#'
+#' @export
 `%product%` = function(X, Y) {
   f = getPDF(X)
   g = getPDF(Y)
@@ -89,22 +93,44 @@ mapRV.RV = function(X, g) {
   }
   Z = structure(list(f = h,
                      type = "PDF",
-                     lower = X[["lower"]] * Y[["lower"]],
-                     upper = X[["upper"]] * Y[["upper"]]),
+                     lower = min(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]]),
+                     upper = max(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]])),
                 class = "RV")
   Z
 }
 
+#' Find the Distribution of a Difference of Random Variables
 #'
+#' This function finds the distribution of a difference of two random variables.
+#'   The two random variables are assumed to be independent. The result is
+#'   returned as an object of class "RV".
 #'
+#' @param X An object of class "RV".
+#' @param Y An object of class "RV".
 #'
+#' @return An object of class "RV", whose distribution is that of X - Y.
+#'
+#' @export
 `%difference%` = function(X, Y) {
-  stop("Not implemented yet.")
+  negY = mapRV(Y, function(y) return(-y))
+  Z = X %convolution% negY
+  Z
 }
 
+#' Find the Distribution of a Quotient of Random Variables
 #'
+#' This function finds the distribution of a quotient of two random variables.
+#'   The two random variables are assumed to be independent. The result is
+#'   returned as an object of class "RV". This function is still experimental.
 #'
+#' @param X An object of class "RV".
+#' @param Y An object of class "RV".
 #'
+#' @return An object of class "RV", whose distribution is that of X / Y.
+#'
+#' @export
 `%quotient%` = function(X, Y) {
-  stop("Not implemented yet.")
+  reciprocalY = mapRV(Y, function(y) return(1/y))
+  Z = X %product% reciprocalY
+  Z
 }
