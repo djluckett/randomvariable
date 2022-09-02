@@ -69,11 +69,30 @@ mapRV.RV = function(X, g) {
   Z
 }
 
+#' Find the Distribution of a Product of Random Variables
 #'
+#' This function finds the distribution of a product of two random variables.
+#'   The two random variables are assumed to be independent. The results is
+#'   returned as an object of class "TV".
 #'
+#' @param X An object of class "RV".
+#' @param Y An object of class "RV".
 #'
+#' @return An object of class "RV", whose distribution is that of X * Y.
 `%product%` = function(X, Y) {
-  stop("Not implemented yet.")
+  f = getPDF(X)
+  g = getPDF(Y)
+  h = function(z) {
+    integrate(function(x) {f(x) * g(z / x) / abs(x)},
+              lower = max(z / Y[["upper"]], X[["lower"]]),
+              upper = min(z / Y[["lower"]], X[["upper"]]))
+  }
+  Z = structure(list(f = h,
+                     type = "PDF",
+                     lower = X[["lower"]] * Y[["lower"]],
+                     upper = X[["upper"]] * Y[["upper"]]),
+                class = "RV")
+  Z
 }
 
 #'
