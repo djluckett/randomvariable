@@ -17,5 +17,5 @@ An object of class "RV", whose distribution is that of g(X).
 \description{
 This function uses the distribution function technique to find the distribution
   of a differentiable function of a random variable and returns the result
-  as an RV object.
+  as an RV object. This function is still experimental.
 }
