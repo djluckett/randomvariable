@@ -231,5 +231,9 @@ getCHF.RV = function(X) {
 #'
 #' @export
 getMGF.RV = function(X) {
-  stop("Not implemented yet.")
+  f = getPDF(X)
+  g = function(t) {
+    integrate(function(x) return(exp(t * x) * f(x)), lower = X[["lower"]], upper = X[["upper"]])[["value"]]
+  }
+  function(x) sapply(x, g)
 }

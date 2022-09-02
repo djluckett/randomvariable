@@ -23,3 +23,12 @@ test_that("Random variables functions are vectorized", {
   expect_equal(length(getPDF(X)(c(1, 2, 3))), 3)
 
 })
+
+test_that("Moment generating functions work", {
+  normal_density = function(x) {
+    dnorm(x, mean = 0, sd = 1)
+  }
+  X = createRV(f = normal_density, type = "PDF")
+  m = getMGF(X)
+  expect_equal(m(0), 1)
+})
