@@ -17,4 +17,42 @@ test_that("Convolutions work", {
   Y = createRV(f = normal_density, type = "PDF")
   Z = X %convolution% Y
   expect_is(Z, "RV")
+  f = getPDF(Z)
+  expect_is(f(1), "numeric")
+})
+
+test_that("Products work", {
+  normal_density = function(x) {
+    dnorm(x, mean = 0, sd = 1)
+  }
+  X = createRV(f = normal_density, type = "PDF")
+  Y = createRV(f = normal_density, type = "PDF")
+  Z = X %product% Y
+  expect_is(Z, "RV")
+  f = getPDF(Z)
+  expect_is(f(1), "numeric")
+})
+
+test_that("Differences work", {
+  normal_density = function(x) {
+    dnorm(x, mean = 0, sd = 1)
+  }
+  X = createRV(f = normal_density, type = "PDF")
+  Y = createRV(f = normal_density, type = "PDF")
+  Z = X %difference% Y
+  expect_is(Z, "RV")
+  f = getPDF(Z)
+  expect_is(f(1), "numeric")
+})
+
+test_that("Quotients work", {
+  normal_density = function(x) {
+    dnorm(x, mean = 0, sd = 1)
+  }
+  X = createRV(f = normal_density, type = "PDF")
+  Y = createRV(f = normal_density, type = "PDF")
+  Z = X %quotient% Y
+  expect_is(Z, "RV")
+  f = getPDF(Z)
+  expect_is(f(1), "numeric")
 })
