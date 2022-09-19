@@ -1,7 +1,7 @@
 Package: randomvariable
 Type: Package
 Title: Probability Calculations on Arbitrary Random Variables
-Version: 0.1.0
+Version: 0.1.0.1000
 Author: Who wrote it
 Maintainer: Daniel Luckett <daniel.luckett.work@gmail.com>
 Description: This package allows for defining arbitrary random variable object 
