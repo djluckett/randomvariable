@@ -100,7 +100,7 @@ getMGF = function(X, ...) {
 #' @export
 getPDF.RV = function(X) {
   if (X[["type"]] == "PDF") {
-    f = function(x, ...) {
+    PDF = function(x, ...) {
       if (x >= X[["lower"]] & x <= X[["upper"]]) {
         X[["f"]](x)
       } else {
@@ -108,7 +108,7 @@ getPDF.RV = function(X) {
       }
     }
   } else if (X[["type"]] == "CDF") {
-    f = function(x, ...) {
+    PDF = function(x, ...) {
       if (x >= X[["lower"]] & x <= X[["upper"]]) {
         numDeriv::grad(X[["f"]], x)
       } else {
@@ -116,7 +116,7 @@ getPDF.RV = function(X) {
       }
     }
   }
-  function(x) sapply(x, f)
+  function(x) sapply(x, PDF)
 }
 
 #' Get the CDF from a Random Variable Object
@@ -130,7 +130,7 @@ getPDF.RV = function(X) {
 #' @export
 getCDF.RV = function(X) {
   if (X[["type"]] == "CDF") {
-    f = function(x) {
+    CDF = function(x) {
       if (x < X[["lower"]]) {
         return(0)
       } else if (x > X[["upper"]]) {
@@ -140,11 +140,11 @@ getCDF.RV = function(X) {
       }
     }
   } else if (X[["type"]] == "PDF") {
-    f = function(x, ...) {
+    CDF = function(x, ...) {
       integrate(X[["f"]], lower = X[["lower"]], upper = x, ...)[["value"]]
     }
   }
-  function(x) sapply(x, f)
+  function(x) sapply(x, CDF)
 }
 
 #' Get the Inverse CDF from a Random Variable Object
@@ -158,15 +158,15 @@ getCDF.RV = function(X) {
 #' @export
 getInverseCDF.RV = function(X) {
   if (X[["type"]] == "CDF") {
-    f = function(x, ...) {
+    inverse_CDF = function(x, ...) {
       GoFKernel::inverse(X[["f"]])(x)
     }
   } else if (X[["type"]] == "PDF") {
-    f = function(x, ...) {
+    inverse_CDF = function(x, ...) {
       GoFKernel::inverse(getCDF(X))(x)
     }
   }
-  function(x) sapply(x, f)
+  function(x) sapply(x, inverse_CDF)
 }
 
 #' Get the Survival Function from a Random Variable Object
@@ -179,11 +179,11 @@ getInverseCDF.RV = function(X) {
 #'
 #' @export
 getSF.RV = function(X) {
-  f = getCDF(X)
-  g = function(x) {
-    return(1 - f(x))
+  CDF = getCDF(X)
+  SF = function(x) {
+    return(1 - CDF(x))
   }
-  function(x) sapply(x, g)
+  function(x) sapply(x, SF)
 }
 
 #' Get the Hazard Function from a Random Variable Object
@@ -196,12 +196,12 @@ getSF.RV = function(X) {
 #'
 #' @export
 getHF.RV = function(X) {
-  f = getPDF(X)
-  g = getSF(X)
-  h = function(x) {
-    return(f(x) / g(x))
+  PDF = getPDF(X)
+  SF = getSF(X)
+  HF = function(x) {
+    return(PDF(x) / SF(x))
   }
-  function(x) sapply(x, h)
+  function(x) sapply(x, HF)
 }
 
 #' Get the Cumulative Hazard Function from a Random Variable Object
@@ -214,11 +214,11 @@ getHF.RV = function(X) {
 #'
 #' @export
 getCHF.RV = function(X) {
-  h = getHF(X)
-  f = function(x, ...) {
-    integrate(h, lower = X[["lower"]], upper = x, ...)[["value"]]
+  HF = getHF(X)
+  CHF = function(x, ...) {
+    integrate(HF, lower = X[["lower"]], upper = x, ...)[["value"]]
   }
-  function(x) sapply(x, f)
+  function(x) sapply(x, CHF)
 }
 
 #' Get the Moment Generating Function from a Random Variable Object
@@ -231,9 +231,9 @@ getCHF.RV = function(X) {
 #'
 #' @export
 getMGF.RV = function(X) {
-  f = getPDF(X)
-  g = function(t) {
-    integrate(function(x) return(exp(t * x) * f(x)), lower = X[["lower"]], upper = X[["upper"]])[["value"]]
+  PDF = getPDF(X)
+  MGF = function(t) {
+    integrate(function(x) return(exp(t * x) * PDF(x)), lower = X[["lower"]], upper = X[["upper"]])[["value"]]
   }
-  function(x) sapply(x, g)
+  function(x) sapply(x, MGF)
 }

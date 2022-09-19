@@ -23,7 +23,7 @@ generateVariates = function(X, ...) {
 #'
 #' @export
 generateVariates.RV = function(X, n) {
-  inverseCDF = getInverseCDF(X)
+  inverse_CDF = getInverseCDF(X)
   unifs = runif(n)
-  sapply(unifs, inverseCDF)
+  sapply(unifs, inverse_CDF)
 }
