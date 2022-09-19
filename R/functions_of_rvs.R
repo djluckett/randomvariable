@@ -31,10 +31,10 @@ mapRV.RV = function(X, g) {
   h = function(y) {
     f(inverse(y))
   }
-  Y = createRV(h,
-               type = "CDF",
-               lower = min(g(X[["lower"]]), g(X[["upper"]])),
-               upper = max(g(X[["lower"]]), g(X[["upper"]])))
+  Y = new_RV(list(f = h,
+                  type = "CDF",
+                  lower = min(g(X[["lower"]]), g(X[["upper"]])),
+                  upper = max(g(X[["lower"]]), g(X[["upper"]]))))
   Y
 }
 
@@ -56,11 +56,10 @@ mapRV.RV = function(X, g) {
   h = function(z) {
     return(integrate(function(t) return(g(t) * f(z - t)), lower = -Inf, upper = Inf)[["value"]])
   }
-  Z = structure(list(f = h,
-                     type = "CDF",
-                     lower = X[["lower"]] + Y[["lower"]],
-                     upper = X[["upper"]] + Y[["upper"]]),
-                class = "RV")
+  Z = new_RV(list(f = h,
+                  type = "CDF",
+                  lower = X[["lower"]] + Y[["lower"]],
+                  upper = X[["upper"]] + Y[["upper"]]))
   Z
 }
 
@@ -84,11 +83,10 @@ mapRV.RV = function(X, g) {
               lower = max(z / Y[["upper"]], X[["lower"]]),
               upper = min(z / Y[["lower"]], X[["upper"]]))
   }
-  Z = structure(list(f = h,
-                     type = "PDF",
-                     lower = min(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]]),
-                     upper = max(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]])),
-                class = "RV")
+  Z = new_RV(list(f = h,
+                  type = "PDF",
+                  lower = min(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]]),
+                  upper = max(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]])))
   Z
 }
 
