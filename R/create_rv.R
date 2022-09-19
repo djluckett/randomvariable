@@ -60,7 +60,7 @@ validate_RV = function(X) {
 
   # Check that defining function is valid and a supported type
   if (type == "PDF") {
-    if (integrate(function(x) return(X[["f"]](x)), lower = X[["lower"]], upper = X[["upper"]])[["value"]] != 1) {
+    if (abs(integrate(function(x) return(X[["f"]](x)), lower = X[["lower"]], upper = X[["upper"]])[["value"]] - 1) > 1e-6) {
       stop("Invalid PDF supplied.")
     }
   } else if (type == "CDF") {
