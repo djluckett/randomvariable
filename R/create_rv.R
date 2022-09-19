@@ -49,7 +49,7 @@ validate_RV = function(X) {
   if (!is.character(X[["type"]])) {
     stop("Defining function type must be a string.")
   }
-  if (!is.numeric(X[["lower"]] | !is.numeric(X[["upper"]]))) {
+  if (!is.numeric(X[["lower"]]) | !is.numeric(X[["upper"]])) {
     stop("Lower and upper limits must be numeric.")
   }
 
@@ -74,7 +74,6 @@ validate_RV = function(X) {
   X
 }
 
-
 #' Random Variables
 #'
 #' This function initializes a random variable object using a defining function,
@@ -92,7 +91,7 @@ validate_RV = function(X) {
 #' @export
 RV = function(f, type = "PDF", lower = -Inf, upper = Inf) {
   X = new_RV(list(f = f, type = type, lower = lower, upper = upper))
-  validate(X)
+  validate_RV(X)
 }
 
 #' Create a Random Variable Object
