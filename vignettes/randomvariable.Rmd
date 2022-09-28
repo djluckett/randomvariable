@@ -1,0 +1,78 @@
+---
+title: "Probability Calculations Using The randomvariable Package"
+author: "Daniel Luckett"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Probability Calculations Using The randomvariable Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette is a work in progress- still under construction.
+
+## Introduction
+
+Random variables, functions mapping a sample space into the space of real numbers, make up the basis of probability theory. Understanding the basics of how calculations on random variables work is key to understanding probability theory. For many students tackling probability and statistics for the first time, the theory of random variables can seem dense and uninviting. Concepts such as probability density functions and cumulative distribution functions, the way these functions define random variables, and how to work with random variables can be tough to tackle when reduced to their underlying mathematics. 
+
+The goal of the `randomvariable` package is to provide an interactive set of R functions to make understanding random variables easier. In this vignette, we'll go through some examples of defining random variable objects, combining and mapping random variables to make new random variables, and performing standard probability calculations on random variables. 
+
+## Example 1: A First Random Variable
+
+The basis of the `randomvariable` package is the `RV` class. An object of class `RV` represents a random variable, from which we can extract functions like a probability density function and cumulative distribution function, calculate mean and variance, and generate random variates. Random variables can be mapped to new random variables and combined with other random variables. 
+
+The `randomvariable` package supports continuous, univariate random variables with an interval as the support. To define a random variable, supply either a probability density function or a cumulative distribution function, specify which type of function is being used to define the random variable, and give the upper and lower limits of the support. As an example, we'll use the probability density function 
+$$
+f(x) = (3/2) (1 - x^2) 1(0 <x < 1).
+$$ 
+A random variable with the distribution defined by this probability density function can be created using the code below. The object `X` has class `RV`.
+
+```{r firstRV}
+library(randomvariable)
+evaluate_pdf = function(x) {
+  1.5 * (1 - x^2)
+}
+X = RV(evaluate_pdf, type = "PDF", lower = 0, upper = 1)
+class(X)
+```
+
+A common first task for working with a random variable is to calculate the expected value and variance. Helper functions for these are provided, returning the result as numeric objects.
+
+```{r meanAndVariance}
+expectedValue(X)
+variance(X)
+```
+
+To generate random samples from the distribution of `X`, use the `generateVariates` method, which uses the argument `n` to determine how many variates to generate and returns a numeric vector of the appropriate length.
+
+```{r generateVariates}
+# variates = generateVariates(X, 5)
+# class(variates)
+# length(variates)
+```
+
+A core property of a random variable is that there are various functions that can uniquely define its distribution, including probability density functions, cumulative distribution functions, hazard functions, and others. Once an object of class `RV` has been defined, the `randomvariable` package makes it easy to convert from one to another. All of these functions that can be used to define a distribution can be extracted from an `RV` object as R functions that can be evaluted. The following code takes our initial random variable and gets the cumulative distribution function.
+
+```{r initialCDF}
+evaluate_cdf = getCDF(X)
+```
+
+Extracting the cumulative distribution function from a rancom variable can be used to answer common probability questions. For example, the following code computes the probability $Pr(0.4 < X < 0.6)$.
+
+```{r calcProb}
+evaluate_cdf(0.6) - evaluate_cdf(0.4)
+```
+
+The cumulative distribution function can be used to verify that `X` is a valid random variable. It should evaluate to 0 and 1 at the lower and upper limits of its support, respectively.
+
+```{r checkCDF}
+evaluate_cdf(X[["lower"]])
+evaluate_cdf(X[["upper"]])
+```
