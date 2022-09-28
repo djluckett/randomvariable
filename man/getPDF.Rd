@@ -2,16 +2,17 @@
 % Please edit documentation in R/get_functions.R
 \name{getPDF}
 \alias{getPDF}
-\title{Generic Method to Get a PDF}
+\title{Get a probability density function}
 \usage{
 getPDF(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{An object for which a probability density function can be defined.}
 }
 \value{
-An object.
+A function.
 }
 \description{
-This function extracts the PDF from an object.
+This is a generic function to get the probability density function from
+  an object.
 }

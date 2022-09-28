@@ -1,10 +1,10 @@
-#' Generic Method to Generate Random Variates
+#' Generate Random Variates
 #'
-#' This function generates random variates from an object.
+#' This is a generic function to generate random variates from a distribution.
 #'
-#' @param X An object.
+#' @param X A random variable object.
 #'
-#' @return An object.
+#' @return A numeric vector of random variates.
 #'
 #' @export
 generateVariates = function(X, ...) {
@@ -19,11 +19,12 @@ generateVariates = function(X, ...) {
 #' @param X An object of class "RV".
 #' @param n A length one numeric. The number of random variates to generate.
 #'
-#' @return A numeric vector of length n.
+#' @return A numeric vector of length n, representing random variates following
+#'   the distribution of X.
 #'
 #' @export
 generateVariates.RV = function(X, n) {
-  inverseCDF = getInverseCDF(X)
+  inverse_CDF = getInverseCDF(X)
   unifs = runif(n)
-  sapply(unifs, inverseCDF)
+  sapply(unifs, inverse_CDF)
 }

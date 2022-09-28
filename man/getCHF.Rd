@@ -2,16 +2,17 @@
 % Please edit documentation in R/get_functions.R
 \name{getCHF}
 \alias{getCHF}
-\title{Generic Method to Get a Cumulative Hazard Function}
+\title{Get a cumulative hazard function}
 \usage{
 getCHF(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{An object for which a cumulative hazard function can be defined.}
 }
 \value{
-An object.
+A function.
 }
 \description{
-This function extracts the cumulative hazard function from an object.
+This is a generic function to get the cumulative hazard function from
+  an object.
 }

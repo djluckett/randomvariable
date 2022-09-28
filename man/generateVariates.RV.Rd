@@ -12,7 +12,8 @@
 \item{n}{A length one numeric. The number of random variates to generate.}
 }
 \value{
-A numeric vector of length n.
+A numeric vector of length n, representing random variates following
+  the distribution of X.
 }
 \description{
 This function generates random variates from a distribution defined by

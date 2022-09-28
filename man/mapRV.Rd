@@ -2,16 +2,17 @@
 % Please edit documentation in R/functions_of_rvs.R
 \name{mapRV}
 \alias{mapRV}
-\title{Generic Method to Map a Random Variable}
+\title{Apply a Function to a Random Variable}
 \usage{
 mapRV(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{A random variable object.}
 }
 \value{
-An object.
+Another random variable object.
 }
 \description{
-This function finds the distribution of a function of a random variable.
+This is a generic function to find the distribution of a function
+  of a random variable.
 }
