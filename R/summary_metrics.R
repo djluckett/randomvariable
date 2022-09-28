@@ -2,9 +2,9 @@
 #'
 #' This function calculates the expected value of an object.
 #'
-#' @param X An object.
+#' @param X A random variable object.
 #'
-#' @return An object.
+#' @return The expected value.
 #'
 #' @export
 expectedValue = function(X, ...) {
@@ -15,9 +15,9 @@ expectedValue = function(X, ...) {
 #'
 #' This function calculates the variance of an object.
 #'
-#' @param X An object.
+#' @param X A random variable object.
 #'
-#' @return An object.
+#' @return The variance
 #'
 #' @export
 variance = function(X, ...) {

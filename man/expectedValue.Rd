@@ -7,10 +7,10 @@
 expectedValue(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{A random variable object.}
 }
 \value{
-An object.
+The expected value.
 }
 \description{
 This function calculates the expected value of an object.

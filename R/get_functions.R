@@ -1,88 +1,93 @@
-#' Generic Method to Get a PDF
+#' Get a probability density function
 #'
-#' This function extracts the PDF from an object.
+#' This is a generic function to get the probability density function from
+#'   an object.
 #'
-#' @param X An object.
+#' @param X An object for which a probability density function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getPDF = function(X, ...) {
   UseMethod("getPDF", X)
 }
 
-#' Generic Method to Get a CDF
+#' Get a cumulative distribution function
 #'
-#' This function extracts the CDF from an object.
+#' This is a generic function to get the cumulative distribution function from
+#'   an object.
 #'
-#' @param X An object.
+#' @param X An object for which a cumulative distribution function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getCDF = function(X, ...) {
   UseMethod("getCDF", X)
 }
 
-#' Generic Method to Get an Inverse CDF
+#' Get an inverse cumulative distribution function
 #'
-#' This function extracts the inverse CDF from an object.
+#' This is a generic function to get the inverse cumulative distribution
+#'   function from an object.
 #'
-#' @param X An object.
+#' @param X An object for which an inverse cumulative distribution function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getInverseCDF = function(X, ...) {
   UseMethod("getInverseCDF", X)
 }
 
-#' Generic Method to Get a Survival Function
+#' Get a survival function
 #'
-#' This function extracts the survival function from an object.
+#' This is a generic function to get the survival function from an object.
 #'
-#' @param X An object.
+#' @param X An object for which a survival function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getSF = function(X, ...) {
   UseMethod("getSF", X)
 }
 
-#' Generic Method to Get a Hazard Function
+#' Get a hazard function
 #'
-#' This function extracts the hazard function from an object.
+#' This is a generic function to get the hazard function from an object.
 #'
-#' @param X An object.
+#' @param X An object for which a hazard function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getHF = function(X, ...) {
   UseMethod("getHF", X)
 }
 
-#' Generic Method to Get a Cumulative Hazard Function
+#' Get a cumulative hazard function
 #'
-#' This function extracts the cumulative hazard function from an object.
+#' This is a generic function to get the cumulative hazard function from
+#'   an object.
 #'
-#' @param X An object.
+#' @param X An object for which a cumulative hazard function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getCHF = function(X, ...) {
   UseMethod("getCHF", X)
 }
 
-#' Generic Method to Get a Moment Generating Function
+#' Get a moment generating function
 #'
-#' This function extracts the moment generating function from an object.
+#' This is a generic function to get the moment generating function from
+#'   an object.
 #'
-#' @param X An object.
+#' @param X An object for which a moment generating function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getMGF = function(X, ...) {

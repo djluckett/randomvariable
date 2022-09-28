@@ -2,16 +2,17 @@
 % Please edit documentation in R/get_functions.R
 \name{getMGF}
 \alias{getMGF}
-\title{Generic Method to Get a Moment Generating Function}
+\title{Get a moment generating function}
 \usage{
 getMGF(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{An object for which a moment generating function can be defined.}
 }
 \value{
-An object.
+A function.
 }
 \description{
-This function extracts the moment generating function from an object.
+This is a generic function to get the moment generating function from
+  an object.
 }

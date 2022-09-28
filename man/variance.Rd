@@ -7,10 +7,10 @@
 variance(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{A random variable object.}
 }
 \value{
-An object.
+The variance
 }
 \description{
 This function calculates the variance of an object.

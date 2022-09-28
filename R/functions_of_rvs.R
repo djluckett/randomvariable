@@ -1,10 +1,11 @@
-#' Generic Method to Map a Random Variable
+#' Apply a Function to a Random Variable
 #'
-#' This function finds the distribution of a function of a random variable.
+#' This is a generic function to find the distribution of a function
+#'   of a random variable.
 #'
-#' @param X An object.
+#' @param X A random variable object.
 #'
-#' @return An object.
+#' @return Another random variable object.
 #'
 #' @export
 mapRV = function(X, ...) {
