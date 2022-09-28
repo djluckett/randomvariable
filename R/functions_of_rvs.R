@@ -65,7 +65,7 @@ mapRV.RV = function(X, g) {
 #'
 #' This function finds the distribution of a product of two random variables.
 #'   The two random variables are assumed to be independent. The result is
-#'   returned as an object of class "RV".
+#'   returned as an object of class "RV". This function is still experimental.
 #'
 #' @param X An object of class "RV".
 #' @param Y An object of class "RV".
@@ -83,8 +83,14 @@ mapRV.RV = function(X, g) {
   }
   new_RV(list(f = product_PDF,
               type = "PDF",
-              lower = min(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]]),
-              upper = max(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]])))
+              lower = min(c(X[["lower"]] * Y[["lower"]],
+                            X[["upper"]] * Y[["upper"]],
+                            X[["lower"]] * Y[["upper"]],
+                            X[["upper"]] * Y[["lower"]])),
+              upper = max(c(X[["lower"]] * Y[["lower"]],
+                            X[["upper"]] * Y[["upper"]],
+                            X[["lower"]] * Y[["upper"]],
+                            X[["upper"]] * Y[["lower"]]))))
 }
 
 #' Find the Distribution of a Difference of Random Variables
