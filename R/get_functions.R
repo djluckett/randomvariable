@@ -1,88 +1,93 @@
-#' Generic Method to Get a PDF
+#' Get a probability density function
 #'
-#' This function extracts the PDF from an object.
+#' This is a generic function to get the probability density function from
+#'   an object.
 #'
-#' @param X An object.
+#' @param X An object for which a probability density function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getPDF = function(X, ...) {
   UseMethod("getPDF", X)
 }
 
-#' Generic Method to Get a CDF
+#' Get a cumulative distribution function
 #'
-#' This function extracts the CDF from an object.
+#' This is a generic function to get the cumulative distribution function from
+#'   an object.
 #'
-#' @param X An object.
+#' @param X An object for which a cumulative distribution function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getCDF = function(X, ...) {
   UseMethod("getCDF", X)
 }
 
-#' Generic Method to Get an Inverse CDF
+#' Get an inverse cumulative distribution function
 #'
-#' This function extracts the inverse CDF from an object.
+#' This is a generic function to get the inverse cumulative distribution
+#'   function from an object.
 #'
-#' @param X An object.
+#' @param X An object for which an inverse cumulative distribution function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getInverseCDF = function(X, ...) {
   UseMethod("getInverseCDF", X)
 }
 
-#' Generic Method to Get a Survival Function
+#' Get a survival function
 #'
-#' This function extracts the survival function from an object.
+#' This is a generic function to get the survival function from an object.
 #'
-#' @param X An object.
+#' @param X An object for which a survival function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getSF = function(X, ...) {
   UseMethod("getSF", X)
 }
 
-#' Generic Method to Get a Hazard Function
+#' Get a hazard function
 #'
-#' This function extracts the hazard function from an object.
+#' This is a generic function to get the hazard function from an object.
 #'
-#' @param X An object.
+#' @param X An object for which a hazard function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getHF = function(X, ...) {
   UseMethod("getHF", X)
 }
 
-#' Generic Method to Get a Cumulative Hazard Function
+#' Get a cumulative hazard function
 #'
-#' This function extracts the cumulative hazard function from an object.
+#' This is a generic function to get the cumulative hazard function from
+#'   an object.
 #'
-#' @param X An object.
+#' @param X An object for which a cumulative hazard function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getCHF = function(X, ...) {
   UseMethod("getCHF", X)
 }
 
-#' Generic Method to Get a Moment Generating Function
+#' Get a moment generating function
 #'
-#' This function extracts the moment generating function from an object.
+#' This is a generic function to get the moment generating function from
+#'   an object.
 #'
-#' @param X An object.
+#' @param X An object for which a moment generating function can be defined.
 #'
-#' @return An object.
+#' @return A function.
 #'
 #' @export
 getMGF = function(X, ...) {
@@ -100,7 +105,7 @@ getMGF = function(X, ...) {
 #' @export
 getPDF.RV = function(X) {
   if (X[["type"]] == "PDF") {
-    f = function(x, ...) {
+    PDF = function(x, ...) {
       if (x >= X[["lower"]] & x <= X[["upper"]]) {
         X[["f"]](x)
       } else {
@@ -108,7 +113,7 @@ getPDF.RV = function(X) {
       }
     }
   } else if (X[["type"]] == "CDF") {
-    f = function(x, ...) {
+    PDF = function(x, ...) {
       if (x >= X[["lower"]] & x <= X[["upper"]]) {
         numDeriv::grad(X[["f"]], x)
       } else {
@@ -116,7 +121,7 @@ getPDF.RV = function(X) {
       }
     }
   }
-  function(x) sapply(x, f)
+  function(x) sapply(x, PDF)
 }
 
 #' Get the CDF from a Random Variable Object
@@ -130,7 +135,7 @@ getPDF.RV = function(X) {
 #' @export
 getCDF.RV = function(X) {
   if (X[["type"]] == "CDF") {
-    f = function(x) {
+    CDF = function(x) {
       if (x < X[["lower"]]) {
         return(0)
       } else if (x > X[["upper"]]) {
@@ -140,11 +145,11 @@ getCDF.RV = function(X) {
       }
     }
   } else if (X[["type"]] == "PDF") {
-    f = function(x, ...) {
+    CDF = function(x, ...) {
       integrate(X[["f"]], lower = X[["lower"]], upper = x, ...)[["value"]]
     }
   }
-  function(x) sapply(x, f)
+  function(x) sapply(x, CDF)
 }
 
 #' Get the Inverse CDF from a Random Variable Object
@@ -158,15 +163,15 @@ getCDF.RV = function(X) {
 #' @export
 getInverseCDF.RV = function(X) {
   if (X[["type"]] == "CDF") {
-    f = function(x, ...) {
+    inverse_CDF = function(x, ...) {
       GoFKernel::inverse(X[["f"]])(x)
     }
   } else if (X[["type"]] == "PDF") {
-    f = function(x, ...) {
+    inverse_CDF = function(x, ...) {
       GoFKernel::inverse(getCDF(X))(x)
     }
   }
-  function(x) sapply(x, f)
+  function(x) sapply(x, inverse_CDF)
 }
 
 #' Get the Survival Function from a Random Variable Object
@@ -179,11 +184,11 @@ getInverseCDF.RV = function(X) {
 #'
 #' @export
 getSF.RV = function(X) {
-  f = getCDF(X)
-  g = function(x) {
-    return(1 - f(x))
+  CDF = getCDF(X)
+  SF = function(x) {
+    return(1 - CDF(x))
   }
-  function(x) sapply(x, g)
+  function(x) sapply(x, SF)
 }
 
 #' Get the Hazard Function from a Random Variable Object
@@ -196,12 +201,12 @@ getSF.RV = function(X) {
 #'
 #' @export
 getHF.RV = function(X) {
-  f = getPDF(X)
-  g = getSF(X)
-  h = function(x) {
-    return(f(x) / g(x))
+  PDF = getPDF(X)
+  SF = getSF(X)
+  HF = function(x) {
+    return(PDF(x) / SF(x))
   }
-  function(x) sapply(x, h)
+  function(x) sapply(x, HF)
 }
 
 #' Get the Cumulative Hazard Function from a Random Variable Object
@@ -214,11 +219,11 @@ getHF.RV = function(X) {
 #'
 #' @export
 getCHF.RV = function(X) {
-  h = getHF(X)
-  f = function(x, ...) {
-    integrate(h, lower = X[["lower"]], upper = x, ...)[["value"]]
+  HF = getHF(X)
+  CHF = function(x, ...) {
+    integrate(HF, lower = X[["lower"]], upper = x, ...)[["value"]]
   }
-  function(x) sapply(x, f)
+  function(x) sapply(x, CHF)
 }
 
 #' Get the Moment Generating Function from a Random Variable Object
@@ -231,9 +236,9 @@ getCHF.RV = function(X) {
 #'
 #' @export
 getMGF.RV = function(X) {
-  f = getPDF(X)
-  g = function(t) {
-    integrate(function(x) return(exp(t * x) * f(x)), lower = X[["lower"]], upper = X[["upper"]])[["value"]]
+  PDF = getPDF(X)
+  MGF = function(t) {
+    integrate(function(x) return(exp(t * x) * PDF(x)), lower = X[["lower"]], upper = X[["upper"]])[["value"]]
   }
-  function(x) sapply(x, g)
+  function(x) sapply(x, MGF)
 }

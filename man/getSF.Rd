@@ -2,16 +2,16 @@
 % Please edit documentation in R/get_functions.R
 \name{getSF}
 \alias{getSF}
-\title{Generic Method to Get a Survival Function}
+\title{Get a survival function}
 \usage{
 getSF(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{An object for which a survival function can be defined.}
 }
 \value{
-An object.
+A function.
 }
 \description{
-This function extracts the survival function from an object.
+This is a generic function to get the survival function from an object.
 }

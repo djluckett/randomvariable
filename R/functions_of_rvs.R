@@ -1,10 +1,11 @@
-#' Generic Method to Map a Random Variable
+#' Apply a Function to a Random Variable
 #'
-#' This function finds the distribution of a function of a random variable.
+#' This is a generic function to find the distribution of a function
+#'   of a random variable.
 #'
-#' @param X An object.
+#' @param X A random variable object.
 #'
-#' @return An object.
+#' @return Another random variable object.
 #'
 #' @export
 mapRV = function(X, ...) {
@@ -24,18 +25,17 @@ mapRV = function(X, ...) {
 #'
 #' @export
 mapRV.RV = function(X, g) {
-  f = getCDF(X)
+  CDF = getCDF(X)
   inverse = function(y) {
     optim(y, function(x) {(g(x) - y)^2}, method = "BFGS")$par
   }
-  h = function(y) {
-    f(inverse(y))
+  mapped_CDF = function(y) {
+    CDF(inverse(y))
   }
-  Y = createRV(h,
-               type = "CDF",
-               lower = min(g(X[["lower"]]), g(X[["upper"]])),
-               upper = max(g(X[["lower"]]), g(X[["upper"]])))
-  Y
+  new_RV(list(f = mapped_CDF,
+              type = "CDF",
+              lower = min(g(X[["lower"]]), g(X[["upper"]])),
+              upper = max(g(X[["lower"]]), g(X[["upper"]]))))
 }
 
 #' Find the Distribution of a Convolution of Random Variables
@@ -51,24 +51,22 @@ mapRV.RV = function(X, g) {
 #'
 #' @export
 `%convolution%` = function(X, Y) {
-  f = getPDF(X)
-  g = getCDF(Y)
-  h = function(z) {
-    return(integrate(function(t) return(g(t) * f(z - t)), lower = -Inf, upper = Inf)[["value"]])
+  PDF = getPDF(X)
+  CDF = getCDF(Y)
+  convolution_CDF = function(z) {
+    return(integrate(function(t) return(CDF(t) * PDF(z - t)), lower = -Inf, upper = Inf)[["value"]])
   }
-  Z = structure(list(f = h,
-                     type = "CDF",
-                     lower = X[["lower"]] + Y[["lower"]],
-                     upper = X[["upper"]] + Y[["upper"]]),
-                class = "RV")
-  Z
+  new_RV(list(f = convolution_CDF,
+              type = "CDF",
+              lower = X[["lower"]] + Y[["lower"]],
+              upper = X[["upper"]] + Y[["upper"]]))
 }
 
 #' Find the Distribution of a Product of Random Variables
 #'
 #' This function finds the distribution of a product of two random variables.
 #'   The two random variables are assumed to be independent. The result is
-#'   returned as an object of class "RV".
+#'   returned as an object of class "RV". This function is still experimental.
 #'
 #' @param X An object of class "RV".
 #' @param Y An object of class "RV".
@@ -77,19 +75,23 @@ mapRV.RV = function(X, g) {
 #'
 #' @export
 `%product%` = function(X, Y) {
-  f = getPDF(X)
-  g = getPDF(Y)
-  h = function(z) {
-    integrate(function(x) {f(x) * g(z / x) / abs(x)},
+  first_PDF = getPDF(X)
+  second_PDF = getPDF(Y)
+  product_PDF = function(z) {
+    integrate(function(x) {first_PDF(x) * second_PDF(z / x) / abs(x)},
               lower = max(z / Y[["upper"]], X[["lower"]]),
               upper = min(z / Y[["lower"]], X[["upper"]]))
   }
-  Z = structure(list(f = h,
-                     type = "PDF",
-                     lower = min(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]]),
-                     upper = max(X[["lower"]] * Y[["lower"]], X[["upper"]] * Y[["upper"]])),
-                class = "RV")
-  Z
+  new_RV(list(f = product_PDF,
+              type = "PDF",
+              lower = min(c(X[["lower"]] * Y[["lower"]],
+                            X[["upper"]] * Y[["upper"]],
+                            X[["lower"]] * Y[["upper"]],
+                            X[["upper"]] * Y[["lower"]])),
+              upper = max(c(X[["lower"]] * Y[["lower"]],
+                            X[["upper"]] * Y[["upper"]],
+                            X[["lower"]] * Y[["upper"]],
+                            X[["upper"]] * Y[["lower"]]))))
 }
 
 #' Find the Distribution of a Difference of Random Variables
@@ -105,9 +107,8 @@ mapRV.RV = function(X, g) {
 #'
 #' @export
 `%difference%` = function(X, Y) {
-  negY = mapRV(Y, function(y) return(-y))
-  Z = X %convolution% negY
-  Z
+  negative_Y = mapRV(Y, function(y) return(-y))
+  X %convolution% negative_Y
 }
 
 #' Find the Distribution of a Quotient of Random Variables
@@ -123,7 +124,6 @@ mapRV.RV = function(X, g) {
 #'
 #' @export
 `%quotient%` = function(X, Y) {
-  reciprocalY = mapRV(Y, function(y) return(1/y))
-  Z = X %product% reciprocalY
-  Z
+  reciprocal_Y = mapRV(Y, function(y) return(1/y))
+  X %product% reciprocal_Y
 }

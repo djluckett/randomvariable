@@ -2,16 +2,17 @@
 % Please edit documentation in R/get_functions.R
 \name{getCDF}
 \alias{getCDF}
-\title{Generic Method to Get a CDF}
+\title{Get a cumulative distribution function}
 \usage{
 getCDF(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{An object for which a cumulative distribution function can be defined.}
 }
 \value{
-An object.
+A function.
 }
 \description{
-This function extracts the CDF from an object.
+This is a generic function to get the cumulative distribution function from
+  an object.
 }

@@ -2,16 +2,16 @@
 % Please edit documentation in R/get_functions.R
 \name{getHF}
 \alias{getHF}
-\title{Generic Method to Get a Hazard Function}
+\title{Get a hazard function}
 \usage{
 getHF(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{An object for which a hazard function can be defined.}
 }
 \value{
-An object.
+A function.
 }
 \description{
-This function extracts the hazard function from an object.
+This is a generic function to get the hazard function from an object.
 }

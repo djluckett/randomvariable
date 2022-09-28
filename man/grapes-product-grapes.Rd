@@ -17,5 +17,5 @@ An object of class "RV", whose distribution is that of X * Y.
 \description{
 This function finds the distribution of a product of two random variables.
   The two random variables are assumed to be independent. The result is
-  returned as an object of class "RV".
+  returned as an object of class "RV". This function is still experimental.
 }

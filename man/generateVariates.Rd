@@ -2,16 +2,16 @@
 % Please edit documentation in R/generate_variates.R
 \name{generateVariates}
 \alias{generateVariates}
-\title{Generic Method to Generate Random Variates}
+\title{Generate Random Variates}
 \usage{
 generateVariates(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{A random variable object.}
 }
 \value{
-An object.
+A numeric vector of random variates.
 }
 \description{
-This function generates random variates from an object.
+This is a generic function to generate random variates from a distribution.
 }

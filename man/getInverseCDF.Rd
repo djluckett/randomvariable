@@ -2,16 +2,17 @@
 % Please edit documentation in R/get_functions.R
 \name{getInverseCDF}
 \alias{getInverseCDF}
-\title{Generic Method to Get an Inverse CDF}
+\title{Get an inverse cumulative distribution function}
 \usage{
 getInverseCDF(X, ...)
 }
 \arguments{
-\item{X}{An object.}
+\item{X}{An object for which an inverse cumulative distribution function can be defined.}
 }
 \value{
-An object.
+A function.
 }
 \description{
-This function extracts the inverse CDF from an object.
+This is a generic function to get the inverse cumulative distribution
+  function from an object.
 }
