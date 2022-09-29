@@ -53,9 +53,33 @@ variance(X)
 To generate random samples from the distribution of `X`, use the `generateVariates` method, which uses the argument `n` to determine how many variates to generate and returns a numeric vector of the appropriate length.
 
 ```{r generateVariates}
-# variates = generateVariates(X, 5)
-# class(variates)
-# length(variates)
+set.seed(101)
+variates = generateVariates(X, 5)
+class(variates)
+length(variates)
+```
+
+The probability density function can be returned as a function, vectorized over it's input, with `getPDF`. Plotting the probability density function is straightforward using `ggplot2`. Compare the plot of the probability density function with a histogram of 100 random variates
+
+```{r pdfPlot, warning = FALSE, message = FALSE, fig.show='hold'}
+library(ggplot2)
+x_values = seq(X[["lower"]], X[["upper"]], 0.01)
+y_values = getPDF(X)(x_values)
+pdf_plot = ggplot() + 
+  geom_line(aes(x = x_values, y = y_values)) + 
+  xlab("X") + 
+  ylab("Y") + 
+  theme_bw() 
+
+new_variates = generateVariates(X, 100)
+variates_plot = ggplot() + 
+  geom_histogram(aes(x = new_variates)) + 
+  xlab("X") + 
+  ylab("Count") + 
+  theme_bw()
+
+pdf_plot
+variates_plot
 ```
 
 A core property of a random variable is that there are various functions that can uniquely define its distribution, including probability density functions, cumulative distribution functions, hazard functions, and others. Once an object of class `RV` has been defined, the `randomvariable` package makes it easy to convert from one to another. All of these functions that can be used to define a distribution can be extracted from an `RV` object as R functions that can be evaluted. The following code takes our initial random variable and gets the cumulative distribution function.
