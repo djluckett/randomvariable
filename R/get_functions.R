@@ -146,9 +146,9 @@ getCDF.RV = function(X) {
     }
   } else if (X[["type"]] == "PDF") {
     CDF = function(x, ...) {
-      if (x <= X[["lower"]]) {
+      if (x < X[["lower"]]) {
         return(0)
-      } else if (x >= X[["upper"]]) {
+      } else if (x > X[["upper"]]) {
         return(1)
       } else {
         integrate(X[["f"]], lower = X[["lower"]], upper = x, ...)[["value"]]
