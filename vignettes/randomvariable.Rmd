@@ -1,0 +1,186 @@
+---
+title: "Probability Calculations Using The randomvariable Package"
+author: "Daniel Luckett"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Probability Calculations Using The randomvariable Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette is a work in progress- still under construction.
+
+## Introduction
+
+Random variables, functions mapping a sample space into the space of real numbers, make up the basis of probability theory. Understanding the basics of how calculations on random variables work is key to understanding probability theory. For many students tackling probability and statistics for the first time, the theory of random variables can seem dense and uninviting. Concepts such as probability density functions and cumulative distribution functions, the way these functions define random variables, and how to work with random variables can be tough to tackle when reduced to their underlying mathematics. 
+
+The goal of the `randomvariable` package is to provide an interactive set of R functions to make understanding random variables easier. In this vignette, we'll go through some examples of defining random variable objects, combining and mapping random variables to make new random variables, and performing standard probability calculations on random variables. 
+
+## Example 1: A First Random Variable
+
+The basis of the `randomvariable` package is the `RV` class. An object of class `RV` represents a random variable, from which we can extract functions like a probability density function and cumulative distribution function, calculate mean and variance, and generate random variates. Random variables can be mapped to new random variables and combined with other random variables. 
+
+The `randomvariable` package supports continuous, univariate random variables with an interval as the support. To define a random variable, supply either a probability density function or a cumulative distribution function, specify which type of function is being used to define the random variable, and give the upper and lower limits of the support. As an example, we'll use the probability density function 
+$$
+f(x) = (3/2) (1 - x^2) 1(0 <x < 1).
+$$ 
+A random variable with the distribution defined by this probability density function can be created using the code below. The object `X` has class `RV`.
+
+```{r firstRV}
+library(randomvariable)
+evaluate_pdf = function(x) {
+  1.5 * (1 - x^2)
+}
+X = RV(evaluate_pdf, type = "PDF", lower = 0, upper = 1)
+class(X)
+```
+
+A common first task for working with a random variable is to calculate the expected value and variance. Helper functions for these are provided, returning the result as numeric objects.
+
+```{r meanAndVariance}
+expectedValue(X)
+variance(X)
+```
+
+To generate random samples from the distribution of `X`, use the `generateVariates` method, which uses the argument `n` to determine how many variates to generate and returns a numeric vector of the appropriate length.
+
+```{r generateVariates}
+set.seed(101)
+variates = generateVariates(X, 5)
+class(variates)
+length(variates)
+```
+
+The probability density function can be returned as a function, vectorized over it's input, with `getPDF`. Plotting the probability density function is straightforward using `ggplot2`. Compare the plot of the probability density function with a histogram of 100 random variates
+
+```{r pdfPlot, warning = FALSE, message = FALSE, fig.show='hold'}
+library(ggplot2)
+x_values = seq(X[["lower"]], X[["upper"]], 0.01)
+y_values = getPDF(X)(x_values)
+pdf_plot = ggplot() + 
+  geom_line(aes(x = x_values, y = y_values)) + 
+  xlab("X") + 
+  ylab("Y") + 
+  theme_bw() 
+
+new_variates = generateVariates(X, 100)
+variates_plot = ggplot() + 
+  geom_histogram(aes(x = new_variates)) + 
+  xlab("X") + 
+  ylab("Count") + 
+  theme_bw()
+
+pdf_plot
+variates_plot
+```
+
+A core property of a random variable is that there are various functions that can uniquely define its distribution, including probability density functions, cumulative distribution functions, hazard functions, and others. Once an object of class `RV` has been defined, the `randomvariable` package makes it easy to convert from one to another. All of these functions that can be used to define a distribution can be extracted from an `RV` object as R functions that can be evaluted. The following code takes our initial random variable and gets the cumulative distribution function.
+
+```{r initialCDF}
+evaluate_cdf = getCDF(X)
+```
+
+Extracting the cumulative distribution function from a rancom variable can be used to answer common probability questions. For example, the following code computes the probability $Pr(0.4 < X < 0.6)$.
+
+```{r calcProb}
+evaluate_cdf(0.6) - evaluate_cdf(0.4)
+```
+
+The cumulative distribution function can be used to verify that `X` is a valid random variable. It should evaluate to 0 and 1 at the lower and upper limits of its support, respectively.
+
+```{r checkCDF}
+evaluate_cdf(X[["lower"]])
+evaluate_cdf(X[["upper"]])
+```
+
+## Example 2: Functions of Random Variables
+
+The random variable package allows for applying functions to an `RV` object, returning another `RV` object. By using `dnorm` as the probability density function, we can create a standard normal random variable object.
+
+```{r normalRV}
+normal_density = function(x) {
+  dnorm(x, mean = 0, sd = 1)
+}
+X = RV(f = normal_density, type = "PDF")
+class(X)
+```
+
+The `mapRV` function takes a random variable, $X$, and a function, $g$, and returns another random variable with the same distribution as $g(X)$. The result will be another object of class `RV`. 
+
+```{r logNormalRV}
+Y = mapRV(X, function(x) exp(x))
+class(Y)
+```
+
+Because `X` has a standard normal distribution, `Y` will have a lognormal distribution. We can compare the CDF of `Y` to the built-in `plnorm` function to confirm this.
+
+```{r logNormalTest, warning = FALSE}
+getCDF(Y)(2)
+plnorm(2)
+```
+
+Because `mapRV` relies on numerical approximations to find the inverse of $g(X)$, the CDF of `Y` may not match `plnorm` after the first few decimal places. Plotting the survival function of `Y` next to a survival function calculated using `plnorm` helps to confirm this.
+
+```{r logNormalSF, warning = FALSE}
+x_values = seq(0, 3, 0.01)
+sf_y = getSF(Y)
+sf_y_values = sf_y(x_values)
+sf_lognormal_values = 1 - plnorm(x_values)
+
+sf_y_plot = ggplot() + 
+  geom_line(aes(x = x_values, y = sf_y_values)) + 
+  xlab("X") + 
+  ylab("Y") + 
+  theme_bw()
+
+sf_lognormal_plot = ggplot() + 
+  geom_line(aes(x = x_values, y = sf_lognormal_values)) + 
+  xlab("X") + 
+  ylab("Y") + 
+  theme_bw()
+
+sf_y_plot
+sf_lognormal_plot
+```
+
+Because of the numerical approximation that is used to find the inverse of $g(X)$, `mapRV` is only recommended when $g(X)$ is differentiable and one-to-one.
+
+## Example 3: Functions of Multiple Random Variables
+
+The `randomvariable` package provides various functions for combining random variables. The following code creates an exponential random variable. Verifying that the hazard function of `X1` is constant is a nice sanity check.
+
+```{r exponentialRV}
+X1 = RV(function(x) return(0.5 * exp(-0.5 * x)), type = "PDF", lower = 0, upper = Inf)
+hf = getHF(X1)
+hf(seq(1, 4, 0.5))
+```
+
+The `%convolution%` function is an infix operator that can be used to add two random variables. The convolution of two exponential random variables, `X1` and `X2`, produces another object of class `RV`, a random variable with the same distribution as the sum of `X1` and `X2`.
+
+```{r convolution}
+X2 = RV(function(x) return(0.5 * exp(-0.5 * x)), type = "PDF", lower = 0, upper = Inf)
+Z = X1 %convolution% X2
+class(Z)
+```
+
+The convolution, `Z`, does not follow an exponentiail distribution, and therefore does not have a constant hazard function.
+
+```{r check ConvolutionHF}
+hf_z = getHF(Z)
+hf_z(seq(1, 4, 0.5))
+```
+
+## Conclusion
+
+Much of the study of statistics focuses around methods of analyzing data sets, and many R packages have been built to make data analysis easier. However, understanding the mathematical properties of random variables is just as important to understanding statistics. Building comfort with distributions, moments, transformations, and convolutions requires a level of effort to work through the calculus needed to see examples of these concepts in practice. Few computational tools exist to provide quick insights and visualizations into the theoretical underpinnings of probability. 
+
+The goal of the randomvariable package is to elucidate concepts in the study of probability by providing computational tools to solve common random variable problems while obscuring the calculus (to some level). The `RV` class provides an object-oriented way of thinking about random variables; a random variable is an object that can be manipulated in certain ways, sometimes producing another random variable object that can then be manipulated in the same ways. This approach should help statistics students explore, understand, and appreciate the complexity of random variables.
+
