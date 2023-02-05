@@ -115,7 +115,7 @@ getPDF.RV = function(X) {
   } else if (X[["type"]] == "CDF") {
     PDF = function(x, ...) {
       if (x >= X[["lower"]] & x <= X[["upper"]]) {
-        numDeriv::grad(X[["f"]], x)
+        numDeriv::grad(X[["f"]], x, method = "simple", method.args = list(eps = 1e-2))
       } else {
         0
       }
@@ -169,12 +169,14 @@ getCDF.RV = function(X) {
 #' @export
 getInverseCDF.RV = function(X) {
   if (X[["type"]] == "CDF") {
-    inverse_CDF = function(x, ...) {
-      GoFKernel::inverse(X[["f"]])(x)
+    inverse_CDF = function(y, ...) {
+      # GoFKernel::inverse(X[["f"]])(x)
+      uniroot(function(x) return(X[["f"]](x) - y), interval = c(max(-50, X[["lower"]]), min(50, X[["upper"]])))$root
     }
   } else if (X[["type"]] == "PDF") {
-    inverse_CDF = function(x, ...) {
-      GoFKernel::inverse(getCDF(X))(x)
+    inverse_CDF = function(y, ...) {
+      # GoFKernel::inverse(getCDF(X))(x)
+      uniroot(function(x) return(getCDF(X)(x) - y), interval = c(max(-50, X[["lower"]]), min(50, X[["upper"]])))$root
     }
   }
   function(x) sapply(x, inverse_CDF)
