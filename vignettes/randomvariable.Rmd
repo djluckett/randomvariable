@@ -177,3 +177,10 @@ The convolution, `Z`, does not follow an exponentiail distribution, and therefor
 hf_z = getHF(Z)
 hf_z(seq(1, 4, 0.5))
 ```
+
+## Conclusion
+
+Much of the study of statistics focuses around methods of analyzing data sets, and many R packages have been built to make data analysis easier. However, understanding the mathematical properties of random variables is just as important to understanding statistics. Building comfort with distributions, moments, transformations, and convolutions requires a level of effort to work through the calculus needed to see examples of these concepts in practice. Few computational tools exist to provide quick insights and visualizations into the theoretical underpinnings of probability. 
+
+The goal of the randomvariable package is to elucidate concepts in the study of probability by providing computational tools to solve common random variable problems while obscuring the calculus (to some level). The `RV` class provides an object-oriented way of thinking about random variables; a random variable is an object that can be manipulated in certain ways, sometimes producing another random variable object that can then be manipulated in the same ways. This approach should help statistics students explore, understand, and appreciate the complexity of random variables.
+
