@@ -27,7 +27,8 @@ mapRV = function(X, ...) {
 mapRV.RV = function(X, g) {
   CDF = getCDF(X)
   inverse = function(y) {
-    optim(y, function(x) {(g(x) - y)^2}, method = "BFGS")$par
+    # optim(y, function(x) {(g(x) - y)^2}, method = "BFGS")$par
+    uniroot(function(x) return(g(x) - y), interval = c(max(-5000, X[["lower"]]), min(5000, X[["upper"]])))$root
   }
   mapped_CDF = function(y) {
     CDF(inverse(y))
