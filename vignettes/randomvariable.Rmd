@@ -115,7 +115,7 @@ class(X)
 
 The `mapRV` function takes a random variable, $X$, and a function, $g$, and returns another random variable with the same distribution as $g(X)$. The result will be another object of class `RV`. 
 
-```{r squareNormalRV}
+```{r logNormalRV}
 Y = mapRV(X, function(x) exp(x))
 class(Y)
 ```
@@ -173,7 +173,7 @@ class(Z)
 
 The convolution, `Z`, does not follow an exponentiail distribution, and therefore does not have a constant hazard function.
 
-```{r}
+```{r check ConvolutionHF}
 hf_z = getHF(Z)
 hf_z(seq(1, 4, 0.5))
 ```
