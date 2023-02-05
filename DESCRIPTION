@@ -1,8 +1,8 @@
 Package: randomvariable
 Type: Package
 Title: Probability Calculations on Arbitrary Random Variables
-Version: 0.2.0
-Author: Who wrote it
+Version: 1.0.0
+Author: Daniel Luckett <daniel.luckett.work@gmail.com>
 Maintainer: Daniel Luckett <daniel.luckett.work@gmail.com>
 Description: This package allows for defining arbitrary random variable object 
     from a probability density function or cumulative distribution function. 
@@ -14,3 +14,6 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
+Suggests: 
+    knitr
+VignetteBuilder: knitr
