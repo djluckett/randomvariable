@@ -59,3 +59,45 @@ getPMF.discreteRV = function(X) {
   function(x) sapply(x, PMF)
 }
 
+#' Get the CDF from a Discrete Random Variable Object
+#'
+#' This function extracts the CDF from a discrete random variable object.
+#'
+#' @param X An object of class "discreteRV".
+#'
+#' @return A function that evaluates the CDF of X.
+#'
+#' @export
+getCDF.discreteRV = function(X) {
+  if (X[["type"]] == "CDF") {
+    CDF = function(x, ...) {
+      if (!is.null(X[["support"]])) {
+        if (x >= min(X[["support"]]) & x <= max(X[["support"]])) {
+          return(X[["f"]](x))
+        } else if (x < min(X[["support"]])) {
+          return(0)
+        } else {
+          return(1)
+        }
+      } else {
+        if (x >= X[["lower"]] & x <= X[["upper"]]) {
+          return(X[["f"]](x))
+        } else if (x < X[["lower"]]) {
+          return(0)
+        } else {
+          return(1)
+        }
+      }
+    }
+  } else if (X[["type"]] == "PMF") {
+    CDF = function(x, ...) {
+      PMF = getPMF(X)
+      if (!is.null(X[["support"]])) {
+        return(sum(PMF(X[["support"]][X[["support"]] <= x])))
+      } else {
+        return(sum(PMF(seq(X[["lower"]], x, 1))))
+      }
+    }
+  }
+  function(x) sapply(x, CDF)
+}
