@@ -39,7 +39,23 @@ getPMF.discreteRV = function(X) {
       }
     }
   } else if (X[["type"]] == "CDF") {
-    # TODO: derive PMF from CDF for discrete distribution
+    PMF = function(x, ...) {
+      if (!is.null(X[["support"]])) {
+        if (x %in% X[["support"]]) {
+          sorted_support = sort(X[["support"]])
+          return(X[["f"]](x) - X[["f"]](sorted_support[which(sorted_support == x) - 1]))
+        } else {
+          return(0)
+        }
+      } else {
+        if (x >= X[["lower"]] & x <= X[["upper"]] & x == floor(x)) {
+          return(X[["f"]](x) - X[["f"]](x - 1))
+        } else {
+          return(0)
+        }
+      }
+    }
   }
   function(x) sapply(x, PMF)
 }
+
