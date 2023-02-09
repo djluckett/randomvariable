@@ -101,3 +101,116 @@ getCDF.discreteRV = function(X) {
   }
   function(x) sapply(x, CDF)
 }
+
+#' Get the Inverse CDF from a Discrete Random Variable Object
+#'
+#' This function extracts the Inverse CDF from a discrete random variable object.
+#'
+#' @param X An object of class "discreteRV".
+#'
+#' @return A function that evaluates the Inverse CDF of X.
+#'
+#' @export
+getInverseCDF.discreteRV = function(X) {
+  inverse_CDF = function(x, ...) {
+    CDF = getCDF(X)
+    if (!is.null(X[["support"]])) {
+      sorted_support = sort(support)
+      prob = 0
+      i = 1
+      while (prob <= y) {
+        x = sorted_support[i]
+        prob = CDF(x)
+        i = i + 1
+      }
+      return(x)
+    } else {
+      prob = 0
+      x = X[["lower"]]
+      while(prob <= y) {
+        prob = CDF(x)
+        x = x + 1
+      }
+      return(x)
+    }
+  }
+  function(x) sapply(x, inverse_CDF)
+}
+
+#' Get the Survival Function from a Discrete Random Variable Object
+#'
+#' This function extracts the SF from a discrete random variable object.
+#'
+#' @param X An object of class "discreteRV".
+#'
+#' @return A function that evaluates the SF of X.
+#'
+#' @export
+getSF.discreteRV = function(X) {
+  CDF = getCDF(X)
+  SF = function(x) {
+    return(1 - CDF(x))
+  }
+  function(x) sapply(x, SF)
+}
+
+#' Get the Hazard Function from a Discrete Random Variable Object
+#'
+#' This function extracts the HF from a discrete random variable object.
+#'
+#' @param X An object of class "discreteRV".
+#'
+#' @return A function that evaluates the HF of X.
+#'
+#' @export
+getHF.discreteRV = function(X) {
+  PMF = getPMF(X)
+  SF = getSF(X)
+  HF = function(x) {
+    return(PDF(x) / SF(x))
+  }
+  function(x) sapply(x, HF)
+}
+
+#' Get the Cumulative Hazard Function from a Discrete Random Variable Object
+#'
+#' This function extracts the CHF from a discrete random variable object.
+#'
+#' @param X An object of class "discreteRV".
+#'
+#' @return A function that evaluates the CHF of X.
+#'
+#' @export
+getCHF.discreteRV = function(X) {
+  HF = getHF(X)
+  CHF = function(x, ...) {
+    if (!is.null(X[["support"]])) {
+      return(sum(HF(X[["support"]][X[["support"]] <= x])))
+    } else {
+      return(sum(HF(seq(X[["lower"]], x, 1))))
+    }
+  }
+  function(x) sapply(x, CHF)
+}
+
+#' Get the Moment Generating Function from a Discrete Random Variable Object
+#'
+#' This function extracts the MGF from a discrete random variable object.
+#'
+#' @param X An object of class "discreteRV".
+#'
+#' @return A function that evaluates the MGF of X.
+#'
+#' @export
+getMGF.discreteRV = function(X) {
+  PMF = getPMF(X)
+  MGF = function(t) {
+    if (!is.null(X[["support"]])) {
+      return(sum(sapply(X[["support"]], function(x) return(exp(t * x) * PMF(x)))))
+    } else {
+      return(sum(sapply(seq(max(X[["lower"]], -5000), min(X[["upper"]], 5000), 1),
+                        function(x) return(exp(t * x) * PMF(x)))))
+    }
+  }
+  function(x) sapply(x, MGF)
+}
