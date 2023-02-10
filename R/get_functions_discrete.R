@@ -93,9 +93,18 @@ getCDF.discreteRV = function(X) {
     CDF = function(x, ...) {
       PMF = getPMF(X)
       if (!is.null(X[["support"]])) {
-        return(sum(PMF(X[["support"]][X[["support"]] <= x])))
+        values = X[["support"]][X[["support"]] <= x]
+        if (length(values) > 0) {
+          return(sum(PMF(values)))
+        } else {
+          return(0)
+        }
       } else {
-        return(sum(PMF(seq(X[["lower"]], x, 1))))
+        if (x >= X[["lower"]]) {
+          return(sum(PMF(seq(X[["lower"]], x, 1))))
+        } else {
+          return(0)
+        }
       }
     }
   }
