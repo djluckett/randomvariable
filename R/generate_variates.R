@@ -28,3 +28,26 @@ generateVariates.RV = function(X, n) {
   unifs = runif(n)
   sapply(unifs, inverse_CDF)
 }
+
+#' Generate Random Variates from A Discrete Random Variable Object
+#'
+#' This function generates random variates from a distribution defined by
+#'   a discrete random variable object.
+#'
+#' @param X An object of class "discreteRV".
+#' @param n A length one numeric. The number of random variates to generate.
+#'
+#' @return A numeric vector of length n, representing random variates following
+#'   the distribution of X.
+#'
+#' @export
+generateVariates.discreteRV = function(X, n) {
+  if (!is.null(X[["support"]])) {
+    support = X[["support"]]
+  } else {
+    support = seq(max(X[["lower"]], -5000), min(X[["upper"]], 5000), 1)
+  }
+  PMF = getPMF(X)
+  prob = PMF(support)
+  sample(support, n, replace = TRUE, prob = prob)
+}
