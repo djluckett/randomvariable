@@ -52,3 +52,42 @@ variance.RV = function(X) {
   mu = expectedValue(X)
   integrate(function(x) return((x - mu)^2 * PDF(x)), lower = X[["lower"]], upper = X[["upper"]])[["value"]]
 }
+
+#' Calculate Expected Value of A Discrete Random Variable
+#'
+#' This function calculates the expected value of a discrete random variable.
+#'
+#' @param X An object of class "discreteRV".
+#'
+#' @return A length one numeric, the expected value of the random variable X.
+#'
+#' @export
+expectedValue.discreteRV = function(X) {
+  PMF = getPMF(X)
+  if (!is.null(X[["support"]])) {
+    return(sum(sapply(X[["support"]], function(x) return(x * PMF(x)))))
+  } else {
+    return(sum(sapply(seq(max(X[["lower"]], -5000), min(X[["upper"]], 5000), 1),
+                      function(x) return(x * PMF(x)))))
+  }
+}
+
+#' Calculate the Variance of A Discrete Random Variable
+#'
+#' This function calculates the variance of a discrete random variable.
+#'
+#' @param X An object of class "discreteRV".
+#'
+#' @return A length one numeric, the variance of the random variable X.
+#'
+#' @export
+variance.discreteRV = function(X) {
+  PMF = getPMF(X)
+  mu = expectedValue(X)
+  if (!is.null(X[["support"]])) {
+    return(sum(sapply(X[["support"]], function(x) return((x - mu)^2 * PMF(x)))))
+  } else {
+    return(sum(sapply(seq(max(X[["lower"]], -5000), min(X[["upper"]], 5000), 1),
+                      function(x) return((x - mu)^2 * PMF(x)))))
+  }
+}
