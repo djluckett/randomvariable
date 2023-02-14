@@ -10,7 +10,7 @@
 #' @return An object of class "discreteRV", whose distribution is that of g(X).
 #'
 #' @export
-mapRV.RV = function(X, g) {
+mapRV.discreteRV = function(X, g) {
   if (!is.null(X[["support"]])) {
     PMF = getPMF(X)
     inverse = function(y) {
