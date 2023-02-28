@@ -39,6 +39,22 @@ mapRV.RV = function(X, g) {
               upper = max(g(X[["lower"]]), g(X[["upper"]]))))
 }
 
+#' Find the Distribution of a Convolution
+#'
+#' This is a generic function to find the distribution of the convolution of
+#'   two objects.
+#'
+#' @param X An object with a distribution.
+#' @param Y An object with a distribution.
+#'
+#' @return An object of the same class as X, whose distribution is
+#'   that of X + Y.
+#'
+#' @export
+`%convolution` = function(X, Y) {
+  UseMethod("convolution")
+}
+
 #' Find the Distribution of a Convolution of Random Variables
 #'
 #' This function finds the distribution of a convolution of two random variables.
@@ -51,7 +67,7 @@ mapRV.RV = function(X, g) {
 #' @return An object of class "RV", whose distribution is that of X + Y.
 #'
 #' @export
-`%convolution%` = function(X, Y) {
+`%convolution%.RV` = function(X, Y) {
   PDF = getPDF(X)
   CDF = getCDF(Y)
   convolution_CDF = function(z) {

@@ -56,3 +56,20 @@ mapRV.discreteRV = function(X, g) {
   }
   new_RV
 }
+
+#' Find the Distribution of a Convolution of Discrete Random Variables
+#'
+#' This function finds the distribution of a convolution of two discrete
+#'   random variables. The two discrete random variables are assumed to be
+#'   independent. The result is returned as an object of class "discreteRV".
+#'
+#' @param X An object of class "discreteRV".
+#' @param Y An object of class "discreteRV".
+#'
+#' @return An object of class "discreteRV", whose distribution is that of X + Y.
+#'
+#' @export
+`%convolution%.discreteRV` = function(X, Y) {
+  # TODO: fill in discrete random variable convolutions
+}
+
