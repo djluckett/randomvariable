@@ -4,7 +4,7 @@
 \alias{\%convolution\%.RV}
 \title{Find the Distribution of a Convolution of Random Variables}
 \usage{
-`\%convolution\%.RV`(X, Y)
+\method{\%convolution\%}{RV}(X, Y)
 }
 \arguments{
 \item{X}{An object of class "RV".}

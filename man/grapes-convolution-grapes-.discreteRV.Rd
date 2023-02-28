@@ -4,7 +4,7 @@
 \alias{\%convolution\%.discreteRV}
 \title{Find the Distribution of a Convolution of Discrete Random Variables}
 \usage{
-`\%convolution\%.discreteRV`(X, Y)
+\method{\%convolution\%}{discreteRV}(X, Y)
 }
 \arguments{
 \item{X}{An object of class "discreteRV".}

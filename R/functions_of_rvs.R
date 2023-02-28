@@ -51,7 +51,7 @@ mapRV.RV = function(X, g) {
 #'   that of X + Y.
 #'
 #' @export
-`%convolution` = function(X, Y) {
+`%convolution%` = function(X, Y) {
   UseMethod("convolution")
 }
 
