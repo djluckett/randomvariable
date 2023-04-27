@@ -87,7 +87,7 @@ mapRV.discreteRV = function(X, g) {
     }
     new_RV = new_discreteRV(list(f = convolution_PMF,
                                  type = "PMF",
-                                 support = support_df[["z"]]))
+                                 support = sort(unique(support_df[["z"]]))))
   } else {
     stop("Convolutions of discrete random variables are currently only supported for two random variables with defined support.")
   }
