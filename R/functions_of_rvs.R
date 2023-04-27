@@ -52,7 +52,7 @@ mapRV.RV = function(X, g) {
 #'
 #' @export
 `%convolution%` = function(X, Y) {
-  UseMethod("convolution")
+  UseMethod("%convolution%")
 }
 
 #' Find the Distribution of a Convolution of Random Variables
