@@ -70,6 +70,27 @@ mapRV.discreteRV = function(X, g) {
 #'
 #' @export
 `%convolution%.discreteRV` = function(X, Y) {
-  # TODO: fill in discrete random variable convolutions
+  if (!is.null(X[["support"]]) & !is.null(Y[["support"]])) {
+    first_PMF = getPMF(X)
+    second_PMF = getPMF(Y)
+    support_df = data.frame(x = rep(X[["support"]], each = length(Y[["support"]])),
+                            y = rep(Y[["support"]], times = length(X[["support"]])))
+    support_df[["z"]] = support_df[["x"]] + support_df[["y"]]
+    convolution_PMF = function(z) {
+      if (!(z %in% support_df[["z"]])) {
+        return(0)
+      } else {
+        z_support = support_df[support_df[["z"]] == z, ]
+        z_support[["prob"]] = first_PMF(z_support[["x"]]) * second_PMF(z_support[["y"]])
+        return(sum(z_support[["prob"]]))
+      }
+    }
+    new_RV = new_discreteRV(list(f = convolution_PMF,
+                                 type = "PMF",
+                                 support = support_df[["z"]]))
+  } else {
+    stop("Convolutions of discrete random variables are currently only supported for two random variables with defined support.")
+  }
+  new_RV
 }
 
