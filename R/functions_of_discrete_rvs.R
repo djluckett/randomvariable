@@ -36,23 +36,22 @@ mapRV.discreteRV = function(X, g) {
     inverse = function(y) {
       # optim(y, function(x) {(g(x) - y)^2}, method = "BFGS")$par
       uniroot(function(x) return(g(x) - y),
-              interval = c(max(-5000, min(X[["support"]])),
-                           min(5000, max(X[["support"]]))))$root
+              interval = c(max(-5000, X[["lower"]]),
+                           min(5000, X[["upper"]])))$root
     }
+    X_support = seq(max(-5000, X[["lower"]]), min(5000, X[["upper"]]))
     mapped_PMF = function(y) {
       x = inverse(y)
-      if (any(x - X[["support"]] < 0.0001)) {
-        return(PMF(X[["support"]][abs(x - X[["support"]]) < 0.0001]))
+      if (any(x - X_support < 0.0001)) {
+        return(PMF(X_support[abs(x - X_support) < 0.0001]))
       } else {
         return(0)
       }
     }
-    lower = min(g(X[["lower"]]), g(X[["upper"]]))
-    upper = max(g(X[["lower"]]), g(X[["upper"]]))
+    support = sapply(X_support, g)
     new_RV = new_discreteRV(list(f = mapped_PMF,
                                  type = "PMF",
-                                 lower = lower,
-                                 upper = upper))
+                                 support = support))
   }
   new_RV
 }
