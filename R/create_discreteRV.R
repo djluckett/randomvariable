@@ -52,7 +52,7 @@ validate_discreteRV = function(X) {
     }
   } else {
     if (!(is.numeric(X[["lower"]]) | is.integer(X[["lower"]])) |
-        !(is.numeric(X[["upper"]] | is.integer(X[["upper"]])))) {
+        !(is.numeric(X[["upper"]]) | is.integer(X[["upper"]]))) {
       stop("Lower and upper limits must be numeric or integer.")
     }
   }
