@@ -21,8 +21,8 @@ mapRV.discreteRV = function(X, g) {
     }
     mapped_PMF = function(y) {
       x = inverse(y)
-      if (x %in% X[["support"]]) {
-        return(PMF(x))
+      if (any(x - X[["support"]] < 0.0001)) {
+        return(PMF(X[["support"]][abs(x - X[["support"]]) < 0.0001]))
       } else {
         return(0)
       }
@@ -41,8 +41,8 @@ mapRV.discreteRV = function(X, g) {
     }
     mapped_PMF = function(y) {
       x = inverse(y)
-      if (x %in% X[["support"]]) {
-        return(PMF(x))
+      if (any(x - X[["support"]] < 0.0001)) {
+        return(PMF(X[["support"]][abs(x - X[["support"]]) < 0.0001]))
       } else {
         return(0)
       }
